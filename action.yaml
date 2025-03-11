@@ -1,0 +1,15 @@
+name: "BrowserStack AppLive Upload"
+description: "Upload build to BrowserStack AppLive"
+inputs:
+  username:
+    description: "Username. Can be found in https://www.browserstack.com/accounts/profile/details"
+    required: true
+  access-key:
+    description: "Access key. Can be found in https://www.browserstack.com/accounts/profile/details"
+    required: true
+  file:
+    description: "Path to apk, aab, or ipa file"
+    required: true
+runs:
+  using: "node20"
+  main: "dist/index.js"
