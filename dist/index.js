@@ -35767,14 +35767,25 @@ const fs = __nccwpck_require__(9896);
 const index_FormData = __nccwpck_require__(6454);
 const axios = __nccwpck_require__(7269);
 
+async function getFileReadStream() {
+  const file = core.getInput('file', { required: true });
+  const uploadedName = core.getInput('uploaded-filename');
+
+  if (uploadedName) {
+    await fs.promises.copyFile(file, uploadedName);
+    return fs.createReadStream(uploadedName);
+  }
+
+  return fs.createReadStream(file);
+}
+
 async function run() {
   try {
     const username = core.getInput('username', { required: true });
     const accessKey = core.getInput('access-key', { required: true });
-    const file = core.getInput('file', { required: true });
 
     const data = new index_FormData();
-    data.append('file', fs.createReadStream(file));
+    data.append('file', getFileReadStream());
 
     await axios.post('https://api-cloud.browserstack.com/app-live/upload', data, { auth: { username: username, password: accessKey } });
   } catch (error) {
