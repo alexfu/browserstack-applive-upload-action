@@ -1,7 +1,7 @@
 {
   "name": "browserstack-applive-upload-action",
   "version": "0.0.1",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "ncc build index.js --license licenses.txt"
   },
