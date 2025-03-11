@@ -35774,7 +35774,7 @@ async function run() {
     const file = core.getInput('file', { required: true });
 
     const data = new index_FormData();
-    data.set('file', fs.createReadStream(file));
+    data.append('file', fs.createReadStream(file));
 
     await axios.post('https://api-cloud.browserstack.com/app-live/upload', data, { auth: { username: username, password: accessKey } });
   } catch (error) {
