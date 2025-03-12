@@ -1,6 +1,6 @@
 const core = require('@actions/core');
 const fs = require('fs');
-const axios = require('axios');
+const { default: axios } = require('axios');
 
 async function getFileReadStream(file, uploadedName) {
   if (uploadedName) {
