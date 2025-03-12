@@ -1,12 +1,8 @@
 const core = require('@actions/core');
 const fs = require('fs');
-const FormData = require('form-data');
 const axios = require('axios');
 
-async function getFileReadStream() {
-  const file = core.getInput('file', { required: true });
-  const uploadedName = core.getInput('uploaded-filename');
-
+async function getFileReadStream(file, uploadedName) {
   if (uploadedName) {
     await fs.promises.copyFile(file, uploadedName);
     return fs.createReadStream(uploadedName);
@@ -19,11 +15,24 @@ async function run() {
   try {
     const username = core.getInput('username', { required: true });
     const accessKey = core.getInput('access-key', { required: true });
+    const file = core.getInput('file', { required: true });
+    const uploadedName = core.getInput('uploaded-filename');
 
-    const data = new FormData();
-    data.append('file', getFileReadStream());
+    const data = {
+      file: await getFileReadStream(file, uploadedName)
+    };
 
-    await axios.post('https://api-cloud.browserstack.com/app-live/upload', data, { auth: { username: username, password: accessKey } });
+    const opts = {
+      auth: {
+        username: username,
+        password: accessKey
+      },
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    }
+
+    await axios.post('https://api-cloud.browserstack.com/app-live/upload', data, opts);
   } catch (error) {
     core.setFailed(error);
   }
